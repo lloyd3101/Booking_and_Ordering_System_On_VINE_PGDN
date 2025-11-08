@@ -1,0 +1,1423 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Customer — Restobar</title>
+  <style>
+    :root{
+      --bg:#f8fafc; --panel:#ffffff; --card:#ffffff;
+      --muted:#64748b; --accent:#10b981; --danger:#ef4444; --success:#10b981; --highlight:#059669;
+      --radius:16px; --shadow:0 8px 30px rgba(0,0,0,0.08);
+      --gradient:linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;scroll-behavior:smooth}
+    body{font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;background:var(--bg);color:#1e293b;line-height:1.6}
+    a{text-decoration:none;color:inherit}
+
+    /* Header */
+    header{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:16px 24px;background:var(--panel);
+      box-shadow:0 4px 20px rgba(0,0,0,0.08);
+      position:sticky;top:0;z-index:20;
+      backdrop-filter:blur(10px);
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      background:var(--gradient);
+      width:44px;height:44px;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:18px;box-shadow:0 4px 10px rgba(16,185,129,0.3);
+    }
+    .brand-text{font-weight:800;font-size:20px;background:var(--gradient);-webkit-background-clip: text;-webkit-text-fill-color: transparent}
+    nav{display:flex;gap:24px}
+    nav a{
+      color:var(--muted);font-weight:600;font-size:14px;
+      transition:.3s;position:relative;padding:8px 0;
+    }
+    nav a:hover{color:var(--highlight)}
+    nav a::after{
+      content:'';position:absolute;bottom:0;left:0;
+      width:0;height:2px;background:var(--highlight);
+      transition:width 0.3s ease;
+    }
+    nav a:hover::after{width:100%}
+    .user{text-align:right;font-size:14px;display:flex;align-items:center;gap:12px}
+    .user a{color:#ef4444;padding:6px 12px;border-radius:8px;transition:all 0.3s}
+    .user a:hover{background:rgba(239,68,68,0.1)}
+
+    /* Hero Section */
+    .hero{
+      padding:80px 20px;text-align:center;background:linear-gradient(135deg, rgba(248,250,252,0.9) 0%, rgba(255,255,255,0.9) 100%);
+      position:relative;overflow:hidden;
+    }
+    .hero::before{
+      content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+      background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" opacity="0.03"><polygon fill="%23059669" points="0,1000 1000,0 1000,1000"/></svg>');
+      background-size:cover;
+    }
+    .hero h1{font-size:48px;margin-bottom:16px;font-weight:800;color:#1e293b;}
+    .hero p{font-size:18px;max-width:600px;margin:0 auto 32px;color:var(--muted)}
+    .hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+    .btn{
+      padding:12px 24px;border-radius:var(--radius);font-weight:600;
+      transition:all 0.3s;cursor:pointer;border:none;font-size:14px;
+    }
+    .btn-primary{
+      background:var(--gradient);color:#fff;box-shadow:0 4px 15px rgba(16,185,129,0.4);
+    }
+    .btn-primary:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(16,185,129,0.6)}
+    .btn-secondary{
+      background:transparent;border:1px solid rgba(0,0,0,0.1);color:#1e293b;
+    }
+    .btn-secondary:hover{background:rgba(5,150,105,0.05);border-color:var(--highlight);color:var(--highlight)}
+
+    /* Sections */
+    section{padding:80px 20px;max-width:1200px;margin:auto}
+    section h2{
+      margin-bottom:32px;font-size:36px;position:relative;display:inline-block;
+      padding-bottom:12px;color:#1e293b;
+    }
+    section h2::after{
+      content:'';position:absolute;bottom:0;left:0;width:60px;height:4px;
+      background:var(--gradient);border-radius:2px;
+    }
+    .card{
+      background:var(--panel);padding:24px;border-radius:var(--radius);
+      margin-bottom:24px;box-shadow:var(--shadow);
+      transition:transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover{transform:translateY(-5px);box-shadow:0 12px 40px rgba(0,0,0,0.15)}
+
+    /* Menu grid */
+    .menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+    .menu-card{
+      background:var(--card);border-radius:var(--radius);padding:20px;
+      box-shadow:var(--shadow);transition:transform .3s, box-shadow .3s;
+      display:flex;flex-direction:column;justify-content:space-between;
+      position:relative;overflow:hidden;border:1px solid rgba(0,0,0,0.05);
+    }
+    .menu-card::before{
+      content:'';position:absolute;top:0;left:0;width:100%;height:4px;
+      background:var(--gradient);transform:scaleX(0);transition:transform 0.3s;
+    }
+    .menu-card:hover{transform:translateY(-8px);box-shadow:0 15px 30px rgba(0,0,0,0.15)}
+    .menu-card:hover::before{transform:scaleX(1)}
+    .menu-card h4{margin-bottom:8px;font-size:18px;color:#1e293b;}
+    .price{color:var(--highlight);font-weight:700;margin-bottom:12px;font-size:20px}
+    .menu-card button{
+      padding:10px 16px;border:0;border-radius:8px;background:var(--success);
+      color:#fff;font-weight:600;cursor:pointer;transition:all 0.3s;
+      box-shadow:0 4px 10px rgba(16,185,129,0.3);
+    }
+    .menu-card button:disabled{background:var(--muted);cursor:not-allowed;box-shadow:none}
+    .menu-card button:hover:not(:disabled){
+      background:#059669;transform:translateY(-2px);box-shadow:0 6px 15px rgba(16,185,129,0.4)
+    }
+    .out-of-stock{color:var(--danger);font-size:12px;font-weight:600;margin-top:4px}
+    .stock-info{color:var(--muted);font-size:12px;margin-top:4px}
+
+    /* Buffet packages list */
+    .buffet-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+    .buffet-card{
+      background:var(--card);padding:24px;border-radius:var(--radius);
+      display:flex;flex-direction:column;justify-content:space-between;
+      box-shadow:var(--shadow);transition:transform .3s, box-shadow .3s;
+      position:relative;overflow:hidden;border:1px solid rgba(0,0,0,0.05);
+    }
+    .buffet-card::before{
+      content:'';position:absolute;top:0;left:0;width:100%;height:4px;
+      background:var(--gradient);
+    }
+    .buffet-card:hover{transform:translateY(-8px);box-shadow:0 15px 30px rgba(0,0,0,0.15)}
+    .buffet-card h4{margin-bottom:12px;font-size:20px;color:#1e293b;}
+    .buffet-card ul{margin:0;padding-left:18px;font-size:14px;color:var(--muted)}
+    .view-btn{
+      background:transparent;border:1px solid rgba(0,0,0,0.1);
+      padding:10px 16px;border-radius:8px;color:var(--muted);cursor:pointer;
+      transition:all 0.3s;margin-top:16px;display:inline-flex;align-items:center;gap:8px;
+    }
+    .view-btn:hover{
+      color:var(--highlight);border-color:var(--highlight);background:rgba(5,150,105,0.05);
+      transform:translateY(-2px);
+    }
+
+    /* Calendar Styles */
+    .calendar-container {
+      margin: 20px 0;
+      padding: 20px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .calendar-nav {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .calendar-nav button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .calendar-nav button:hover {
+      background: var(--highlight);
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .calendar-day-header {
+      text-align: center;
+      font-weight: 600;
+      color: var(--muted);
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    .calendar-day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+      position: relative;
+    }
+
+    .calendar-day:hover {
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .calendar-day.available {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--highlight);
+    }
+
+    .calendar-day.booked {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+      cursor: not-allowed;
+    }
+
+    .calendar-day.today {
+      border-color: var(--accent);
+    }
+
+    .calendar-day.selected {
+      background: var(--accent);
+      color: white;
+    }
+
+    .calendar-day.other-month {
+      color: var(--muted);
+      opacity: 0.5;
+    }
+
+    .calendar-legend {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+    }
+
+    .legend-available { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .legend-booked { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); }
+    .legend-today { background: transparent; border: 2px solid var(--accent); }
+    .legend-selected { background: var(--accent); }
+
+    .calendar-info {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(16, 185, 129, 0.05);
+      border-radius: var(--radius);
+      border-left: 4px solid var(--accent);
+    }
+
+    /* Modal */
+    .modal-backdrop{
+      position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;
+      align-items:center;justify-content:center;z-index:60;padding:20px;
+      backdrop-filter:blur(5px);
+    }
+    .modal-backdrop.open{display:flex}
+    .modal{
+      background:var(--panel);Max-width:1000px;width:100%;border-radius:16px;
+      overflow:auto;display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:24px;
+      box-shadow:0 25px 50px rgba(0,0,0,0.2);animation:modalAppear 0.3s ease-out;
+    }
+    @keyframes modalAppear{
+      from{opacity:0;transform:scale(0.9)}
+      to{opacity:1;transform:scale(1)}
+    }
+    .modal img{width:100%;height:auto;border-radius:12px;display:block;box-shadow:0 8px 25px rgba(0,0,0,0.1)}
+    .modal h3{margin-top:0;font-size:24px;color:#1e293b;}
+    .modal .rates table{width:100%;border-collapse:collapse;color:var(--muted)}
+    .modal .rates th,.modal .rates td{padding:12px;border-bottom:1px solid rgba(0,0,0,0.1);text-align:left}
+    .modal .rates th{color:#1e293b;font-weight:600}
+    .modal .close{
+      background:transparent;border:0;color:#ef4444;font-size:24px;
+      cursor:pointer;transition:transform 0.3s;width:36px;height:36px;
+      display:flex;align-items:center;justify-content:center;border-radius:50%;
+    }
+    .modal .close:hover{
+      transform:rotate(90deg);background:rgba(239,68,68,0.1);
+    }
+
+    /* Forms */
+    form{display:grid;gap:16px;max-width:500px}
+    input,select,textarea{
+      padding:12px 16px;border-radius:8px;border:1px solid rgba(0,0,0,0.1);
+      background:var(--card);color:#1e293b;width:100%;transition:all 0.3s;
+      font-family:inherit;
+    }
+    input:focus,select:focus,textarea:focus{
+      outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(16,185,129,0.2);
+    }
+    button.submit{
+      background:var(--gradient);padding:12px;font-weight:600;color:#fff;
+      border:0;border-radius:8px;cursor:pointer;transition:all 0.3s;
+      box-shadow:0 4px 15px rgba(16,185,129,0.4);
+    }
+    button.submit:hover{
+      background:var(--accent);transform:translateY(-2px);
+      box-shadow:0 6px 20px rgba(16,185,129,0.6);
+    }
+
+    /* Cart sidebar */
+    .cart-box{
+      position:fixed;top:0;right:0;width:360px;height:100%;
+      background:var(--panel);box-shadow:-4px 0 12px rgba(0,0,0,0.15);
+      padding:24px;transform:translateX(100%);transition:transform 0.3s ease-out;
+      z-index:30;display:flex;flex-direction:column;
+    }
+    .cart-box.open{transform:translateX(0)}
+    .cart-header{
+      display:flex;justify-content:space-between;align-items:center;
+      margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(0,0,0,0.1);
+    }
+    .cart-items{flex:1;overflow-y:auto;margin-bottom:16px}
+    .cart-item{
+      display:flex;justify-content:space-between;align-items:center;
+      margin-bottom:12px;font-size:14px;padding:12px;border-radius:8px;
+      background:var(--card);transition:background 0.2s;border:1px solid rgba(0,0,0,0.05);
+    }
+    .cart-item:hover{background:rgba(5,150,105,0.03)}
+    .cart-total{
+      font-weight:700;margin-bottom:16px;font-size:18px;color:#1e293b;
+      padding-top:16px;border-top:1px solid rgba(0,0,0,0.1);
+    }
+    .checkout{
+      padding:12px;border:0;border-radius:8px;background:var(--gradient);
+      color:#fff;font-weight:600;cursor:pointer;transition:all 0.3s;
+      box-shadow:0 4px 15px rgba(16,185,129,0.4);
+    }
+    .checkout:hover{
+      transform:translateY(-2px);box-shadow:0 6px 20px rgba(16,185,129,0.6);
+    }
+
+    /* Floating Cart Button */
+    .cart-float{
+      position:fixed;right:24px;bottom:24px;background:var(--success);
+      color:#fff;padding:16px 20px;border-radius:50px;cursor:pointer;
+      box-shadow:0 8px 25px rgba(16,185,129,0.4);font-weight:700;z-index:40;
+      display:flex;align-items:center;gap:8px;transition:all 0.3s;
+    }
+    .cart-float:hover{
+      transform:translateY(-3px) scale(1.05);box-shadow:0 12px 30px rgba(16,185,129,0.5);
+    }
+
+    /* responsive modal */
+    @media (max-width:900px){
+      .modal{grid-template-columns:1fr;max-height:90vh}
+    }
+    
+    /* Buffet selection styles */
+    .buffet-selection {
+      margin-top: 20px; padding: 20px; background: var(--card); 
+      border-radius: var(--radius); box-shadow: var(--shadow); border:1px solid rgba(0,0,0,0.05);
+    }
+    .buffet-option {
+      margin-bottom: 16px; padding: 16px; border: 1px solid rgba(0,0,0,0.1); 
+      border-radius: 12px; cursor: pointer; transition: all 0.3s;
+    }
+    .buffet-option:hover {
+      border-color: var(--highlight); background: rgba(5,150,105,0.03);
+      transform:translateY(-3px);
+    }
+    .buffet-option.selected {
+      border-color: var(--accent); background: rgba(16, 185, 129, 0.05);
+      box-shadow:0 4px 15px rgba(16,185,129,0.1);
+    }
+    .buffet-price {color: var(--highlight); font-weight: 600; margin-top: 4px;font-size:18px}
+    .small-note {font-size:13px;color:var(--muted);margin-top:6px}
+
+    /* Footer */
+    footer{
+      background:var(--panel);padding:40px 20px;text-align:center;
+      margin-top:60px;border-top:1px solid rgba(0,0,0,0.05);
+    }
+    .footer-content{
+      max-width:1200px;margin:0 auto;display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+      gap:40px;text-align:left;
+    }
+    .footer-section h3{
+      margin-bottom:16px;color:#1e293b;font-size:18px;
+      position:relative;padding-bottom:8px;
+    }
+    .footer-section h3::after{
+      content:'';position:absolute;bottom:0;left:0;
+      width:30px;height:2px;background:var(--gradient);
+    }
+    .footer-section p{color:var(--muted);line-height:1.6}
+    .footer-bottom{
+      margin-top:40px;padding-top:20px;
+      border-top:1px solid rgba(0,0,0,0.05);
+      color:var(--muted);font-size:14px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      header{flex-direction:column;gap:16px;padding:16px}
+      nav{gap:16px;flex-wrap:wrap;justify-content:center}
+      .hero h1{font-size:36px}
+      .hero-btns{flex-direction:column;align-items:center}
+      .btn{width:100%;max-width:300px}
+      section{padding:60px 20px}
+      section h2{font-size:28px}
+      .cart-box{width:100%}
+      .calendar-grid {
+        gap: 4px;
+      }
+      .calendar-day {
+        font-size: 12px;
+      }
+    }
+
+    /* Animation for section appearance */
+    .fade-in {
+      animation: fadeIn 0.8s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">RB</div>
+      <div class="brand-text">Restobar</div>
+    </div>
+
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#menu">Menu</a>
+      <a href="#reservation">Reservation</a>
+      <a href="#buffet">Buffet</a>
+      <a href="#contact">Contact Us</a>
+    </nav>
+
+    <div class="user">
+      <div id="cName" style="font-weight:700">Customer</div>
+      <a href="auth.html">Logout</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <h1>Welcome to Restobar</h1>
+    <p>Experience the finest Filipino cuisine in an elegant setting. From traditional favorites to modern interpretations, we bring you authentic flavors with a contemporary twist.</p>
+    <div class="hero-btns">
+      <a href="#menu" class="btn btn-primary">Explore Our Menu</a>
+      <a href="#reservation" class="btn btn-secondary">Make a Reservation</a>
+    </div>
+  </section>
+
+  <!-- Sections -->
+  <section id="menu" class="fade-in">
+    <h2>Our Menu</h2>
+    <div class="menu-grid" id="menuList"></div>
+  </section>
+
+  <section id="reservation" class="fade-in">
+    <h2>Reservation</h2>
+    
+    <!-- Calendar Section -->
+    <div class="card">
+      <h3>Availability Calendar</h3>
+      <p class="muted">Check available dates for your reservation. Green dates are available, red dates are booked.</p>
+      
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <h4 id="calendarMonthYear">January 2024</h4>
+          <div class="calendar-nav">
+            <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
+            <button id="todayBtn">Today</button>
+            <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+        
+        <div class="calendar-grid" id="calendarGrid">
+          <!-- Calendar will be generated here -->
+        </div>
+        
+        <div class="calendar-legend">
+          <div class="legend-item">
+            <div class="legend-color legend-available"></div>
+            <span>Available</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color legend-booked"></div>
+            <span>Booked</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color legend-today"></div>
+            <span>Today</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color legend-selected"></div>
+            <span>Selected</span>
+          </div>
+        </div>
+        
+        <div class="calendar-info" id="calendarInfo">
+          Select a date to see availability information
+        </div>
+      </div>
+    </div>
+
+    <!-- Reservation Form -->
+    <div class="card">
+      <h3>Make a Reservation</h3>
+      <form id="reservationForm">
+        <!-- Buffet Selection -->
+        <div class="buffet-selection">
+          <h4 style="margin-bottom:12px;color:var(--highlight)">Select Buffet Package (Optional)</h4>
+          <div id="buffetOptions"></div>
+
+          <div id="selectedBuffetInfo" style="margin-top:12px;padding:12px;background:rgba(16,185,129,0.05);border-radius:8px;display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <strong id="selectedBuffetName"></strong>
+                <div class="small-note" id="selectedBuffetInclusions"></div>
+              </div>
+              <div style="text-align:right">
+                <div>Per-package price</div>
+                <div class="buffet-price">₱<span id="selectedBuffetPrice">0</span></div>
+              </div>
+            </div>
+
+            <div style="margin-top:10px">
+              <label style="font-size:13px;color:var(--muted);display:block;margin-bottom:6px">Choose number of persons (rate):</label>
+              <select id="selectedBuffetPersons"></select>
+            </div>
+
+            <input type="hidden" id="selectedBuffet" name="buffet">
+            <input type="hidden" id="selectedBuffetPriceValue" name="buffetPrice">
+            <input type="hidden" id="selectedBuffetPersonsValue" name="buffetPersons">
+          </div>
+        </div>
+
+        <!-- Reservation inputs -->
+        <input type="text" id="rName" name="rName" placeholder="Full Name" required>
+        <input type="text" id="rContact" name="rContact" placeholder="Contact Number" required>
+        <input type="date" id="rDate" name="rDate" required>
+        <div style="display:flex;gap:10px">
+          <input type="time" id="rStart" name="rStart" required>
+          <input type="time" id="rEnd" name="rEnd" required>
+        </div>
+        <input type="number" id="rGuests" name="rGuests" placeholder="Guests" required min="1">
+        <select id="rEvent" name="rEvent" required>
+          <option value="">Select Event</option>
+          <option>Birthday Party</option>
+          <option>Dining</option>
+          <option>Regular</option>
+          <option>Live Band</option>
+        </select>
+
+        <button type="submit" class="submit">Reserve Now</button>
+      </form>
+
+      <!-- optional: show user's submitted reservations -->
+      <div id="myReservations" style="margin-top:16px"></div>
+    </div>
+  </section>
+
+  <section id="buffet" class="fade-in">
+    <h2>Buffet Packages</h2>
+    <div class="buffet-grid" id="buffetGrid"></div>
+  </section>
+
+  <section id="contact" class="fade-in">
+    <h2>Contact Us</h2>
+    <form id="contactForm" onsubmit="sendContact(event)">
+      <input type="text" placeholder="Your Name" required/>
+      <input type="email" placeholder="Your Email" required/>
+      <textarea rows="4" placeholder="Your Message" required></textarea>
+      <button type="submit" class="submit">Send Message</button>
+    </form>
+  </section>
+
+  <!-- Buffet Modal (view package details + image + choose persons) -->
+  <div id="buffetModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="buffetTitle">
+      <div>
+        <!-- image from provided file (developer assets path) -->
+        <img id="buffetImage" alt="Buffet menu image" src="sandbox:/mnt/data/3a790bac-cb27-4abc-8963-9451dbdbc3f2.png" />
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h3 id="buffetTitle">Package</h3>
+          <button class="close" onclick="closeBuffetModal()">✕</button>
+        </div>
+
+        <div id="buffetDetails" style="margin-top:8px"></div>
+
+        <div style="margin-top:12px">
+          <label style="font-size:13px;color:var(--muted);display:block;margin-bottom:6px">Choose number of persons (rate)</label>
+          <select id="modalBuffetPersons" style="width:100%;padding:10px;border-radius:8px;background:var(--card);border:1px solid rgba(0,0,0,0.1);color:#1e293b"></select>
+        </div>
+
+        <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+          <div style="flex:1">
+            <div class="small-note">Selected price:</div>
+            <div class="buffet-price">₱ <span id="modalSelectedPrice">0</span></div>
+          </div>
+          <div>
+            <!-- Updated: this button now redirects to Reservation and prefills form instead of creating reservation directly -->
+            <button class="submit" onclick="redirectToReservationFromModal()">Book This Package</button>
+            <button class="view-btn" onclick="downloadBuffetInfo(currentModalIndex)">Download Info</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Cart Button -->
+  <div class="cart-float" onclick="toggleCart()">
+    <span>🛒</span>
+    <span>Cart (<span id="cartCount">0</span>)</span>
+  </div>
+
+  <!-- Cart Sidebar -->
+  <div class="cart-box" id="cartBox">
+    <div class="cart-header">
+      <h3>Your Cart</h3>
+      <button onclick="toggleCart()" style="background:none;border:0;color:#ef4444;font-size:18px;cursor:pointer">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-total" id="cartTotal">Total: ₱0</div>
+    <button class="checkout" onclick="checkout()">Checkout</button>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>About Restobar</h3>
+        <p>Experience the finest Filipino cuisine in an elegant setting. From traditional favorites to modern interpretations, we bring you authentic flavors with a contemporary twist.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Contact Info</h3>
+        <p>📍 123 Food Street, Manila</p>
+        <p>📞 +63 912 345 6789</p>
+        <p>✉️ info@restobar.com</p>
+      </div>
+      <div class="footer-section">
+        <h3>Opening Hours</h3>
+        <p>Monday - Friday: 10AM - 10PM</p>
+        <p>Saturday - Sunday: 9AM - 11PM</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2023 Restobar. All rights reserved.</p>
+    </div>
+  </footer>
+
+<script>
+  // Query Param for user
+  function qp(name){const p=new URLSearchParams(location.search);return p.get(name)||'';}
+  const customerName = qp('user')||qp('email')||'Customer';
+  document.getElementById('cName').textContent = customerName;
+
+  // Calendar functionality
+  let currentDate = new Date();
+  let selectedDate = null;
+  let bookedDates = [];
+
+  // Load booked dates from localStorage
+  function loadBookedDates() {
+    try {
+      const reservations = JSON.parse(localStorage.getItem('restobar_reservations') || '[]');
+      // Extract dates from reservations and mark them as booked
+      bookedDates = reservations
+        .filter(res => res.status === 'Confirmed' || res.status === 'pending')
+        .map(res => res.reservation_date || res.date);
+    } catch (e) {
+      bookedDates = [];
+    }
+  }
+
+  // Calendar functions
+  function generateCalendar() {
+    const calendarGrid = document.getElementById('calendarGrid');
+    const monthYear = document.getElementById('calendarMonthYear');
+    
+    // Clear previous calendar
+    calendarGrid.innerHTML = '';
+    
+    // Set month year header
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    monthYear.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+    
+    // Add day headers
+    const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    dayHeaders.forEach(day => {
+      const dayHeader = document.createElement('div');
+      dayHeader.className = 'calendar-day-header';
+      dayHeader.textContent = day;
+      calendarGrid.appendChild(dayHeader);
+    });
+    
+    // Get first day of month and total days
+    const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    const totalDays = lastDay.getDate();
+    const startingDay = firstDay.getDay();
+    
+    // Add empty cells for days before the first day of month
+    for (let i = 0; i < startingDay; i++) {
+      const emptyDay = document.createElement('div');
+      emptyDay.className = 'calendar-day other-month';
+      calendarGrid.appendChild(emptyDay);
+    }
+    
+    // Add days of the month
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    for (let day = 1; day <= totalDays; day++) {
+      const dayElement = document.createElement('div');
+      dayElement.className = 'calendar-day';
+      dayElement.textContent = day;
+      
+      const currentDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+      const dateString = currentDay.toISOString().split('T')[0];
+      
+      // Check if today
+      if (currentDay.getTime() === today.getTime()) {
+        dayElement.classList.add('today');
+      }
+      
+      // Check if booked
+      if (bookedDates.includes(dateString)) {
+        dayElement.classList.add('booked');
+      } else {
+        dayElement.classList.add('available');
+      }
+      
+      // Check if selected
+      if (selectedDate && selectedDate.toDateString() === currentDay.toDateString()) {
+        dayElement.classList.add('selected');
+      }
+      
+      // Add click event
+      if (!bookedDates.includes(dateString)) {
+        dayElement.addEventListener('click', () => selectDate(currentDay));
+      }
+      
+      calendarGrid.appendChild(dayElement);
+    }
+    
+    updateCalendarInfo();
+  }
+
+  function selectDate(date) {
+    selectedDate = date;
+    const dateString = date.toISOString().split('T')[0];
+    
+    // Update form date field
+    document.getElementById('rDate').value = dateString;
+    
+    // Regenerate calendar to show selection
+    generateCalendar();
+    
+    // Update info
+    updateCalendarInfo();
+  }
+
+  function updateCalendarInfo() {
+    const infoElement = document.getElementById('calendarInfo');
+    
+    if (selectedDate) {
+      const dateString = selectedDate.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      
+      if (bookedDates.includes(selectedDate.toISOString().split('T')[0])) {
+        infoElement.innerHTML = `
+          <strong>${dateString}</strong><br>
+          <span style="color: var(--danger)">❌ This date is fully booked. Please select another date.</span>
+        `;
+      } else {
+        infoElement.innerHTML = `
+          <strong>${dateString}</strong><br>
+          <span style="color: var(--success)">✅ This date is available for reservation!</span>
+        `;
+      }
+    } else {
+      infoElement.textContent = 'Select a date to see availability information';
+    }
+  }
+
+  function navigateMonth(direction) {
+    currentDate.setMonth(currentDate.getMonth() + direction);
+    generateCalendar();
+  }
+
+  function goToToday() {
+    currentDate = new Date();
+    selectedDate = null;
+    generateCalendar();
+  }
+
+  // Initialize calendar
+  function initCalendar() {
+    loadBookedDates();
+    generateCalendar();
+    
+    // Add event listeners
+    document.getElementById('prevMonth').addEventListener('click', () => navigateMonth(-1));
+    document.getElementById('nextMonth').addEventListener('click', () => navigateMonth(1));
+    document.getElementById('todayBtn').addEventListener('click', goToToday);
+  }
+
+  // Load data from localStorage
+  async function loadMenuData() {
+    try {
+      return JSON.parse(localStorage.getItem('restobar_menu') || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  async function loadBuffetData() {
+    try {
+      return JSON.parse(localStorage.getItem('restobar_buffet_packages') || `[
+        {"name":"All-In","price":41000,"inclusions":["Buffet — 3 Dishes, 1 side dish, Dessert, Rice, Drinks","Table and Dining Set-up","Backdrop","Host, Spinner & Singer","Sound System","4 Hrs. Venue Use","Attentive Staff"],"rates":[{"persons":100,"rate":61000},{"persons":90,"rate":56000},{"persons":80,"rate":51000},{"persons":70,"rate":46000},{"persons":60,"rate":41000},{"persons":50,"rate":36000}]},
+        {"name":"Classic","price":24999,"inclusions":["Buffet — 3 Dishes, 1 side dish, Dessert, Rice, Drinks","Table and Dining Set-up","Backdrop","Sound System","4 Hrs. Venue Use","Attentive Staff"],"rates":[{"persons":60,"rate":28999},{"persons":50,"rate":24999},{"persons":40,"rate":20999},{"persons":30,"rate":16999}]},
+        {"name":"Intimate","price":12999,"inclusions":["Buffet — 3 Dishes, 1 side dish, Dessert, Rice, Drinks","Table and Dining Set-up","4 Hrs. Venue Use","Attentive Staff"],"rates":[{"persons":40,"rate":15999},{"persons":30,"rate":12999},{"persons":20,"rate":8999}]}
+      ]`);
+    } catch (e) {
+      return [];
+    }
+  }
+
+  // Render menu items dynamically
+  async function renderMenu() {
+    const menu = await loadMenuData();
+    const menuList = document.getElementById("menuList");
+    menuList.innerHTML = '';
+    
+    // Use default menu if empty
+    const displayMenu = (Array.isArray(menu) && menu.length > 0) ? menu : [
+      {id: Date.now(), name:"Adobo Rice", price:120, stock:10, active:true},
+      {id: Date.now()+1, name:"Sisig", price:220, stock:5, active:true},
+      {id: Date.now()+2, name:"Lechon Kawali", price:250, stock:3, active:true},
+      {id: Date.now()+3, name:"Sinigang na Baboy", price:300, stock:8, active:true},
+      {id: Date.now()+4, name:"Chicken Inasal", price:180, stock:7, active:true}
+    ];
+
+    displayMenu.forEach(m => {
+      if (!m.active) return; // Skip inactive items
+      
+      const div = document.createElement("div");
+      div.className = "menu-card";
+
+      const top = document.createElement("div");
+      const h4 = document.createElement("h4");
+      h4.textContent = m.name;
+      const price = document.createElement("div");
+      price.className = "price";
+      price.textContent = `₱${m.price}`;
+      top.appendChild(h4);
+      top.appendChild(price);
+      if (m.stock > 0) {
+        const stockInfo = document.createElement('div');
+        stockInfo.className = 'stock-info';
+        stockInfo.textContent = `${m.stock} in stock`;
+        top.appendChild(stockInfo);
+      }
+
+      const bottom = document.createElement("div");
+      bottom.style.marginTop = '10px';
+      if (m.stock <= 0) {
+        const btn = document.createElement('button');
+        btn.disabled = true;
+        btn.textContent = 'Out of Stock';
+        const oos = document.createElement('div');
+        oos.className = 'out-of-stock';
+        oos.textContent = 'Out of Stock';
+        bottom.appendChild(btn);
+        bottom.appendChild(oos);
+      } else {
+        const btn = document.createElement('button');
+        btn.textContent = 'Add to Cart';
+        btn.addEventListener('click', () => {
+          addToCart(m.name, Number(m.price));
+        });
+        bottom.appendChild(btn);
+      }
+
+      div.appendChild(top);
+      div.appendChild(bottom);
+      menuList.appendChild(div);
+    });
+  }
+
+  // Render buffet packages dynamically
+  async function renderBuffetPackages() {
+    buffetPackages = await loadBuffetData();
+    const buffetGrid = document.getElementById('buffetGrid');
+    buffetGrid.innerHTML = '';
+    if (!Array.isArray(buffetPackages)) buffetPackages = [];
+    
+    buffetPackages.forEach((pkg, idx) => {
+      const card = document.createElement('div');
+      card.className = 'buffet-card';
+      const inclPreview = (pkg.inclusions || []).slice(0,3).map(i=>`<li>${escapeHtml(i)}</li>`).join('');
+      const ratesPreview = (pkg.rates || []).slice(0,3).map(r=>`<div style="display:flex;justify-content:space-between;color:var(--muted)">${r.persons} persons <strong>₱ ${r.rate.toLocaleString()}</strong></div>`).join('');
+      card.innerHTML = `
+        <div>
+          <h4>${escapeHtml(pkg.name)}</h4>
+          <div class="price">Starting at ₱${(pkg.price||0).toLocaleString()}</div>
+          <ul>${inclPreview}</ul>
+        </div>
+        <div style="margin-top:12px">
+          ${ratesPreview}
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
+          <button class="view-btn" data-idx="${idx}">View Package</button>
+        </div>
+      `;
+      buffetGrid.appendChild(card);
+    });
+
+    // attach event listeners to view buttons
+    buffetGrid.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = Number(btn.dataset.idx);
+        openBuffetModal(idx);
+      });
+    });
+  }
+
+  // Global variables
+  let cart = [];
+  let buffetPackages = [];
+  let currentModalIndex = -1;
+
+  // Initialize page
+  async function init() {
+    await renderMenu();
+    await renderBuffetPackages();
+    renderBuffetOptions();
+    loadCart();
+    updateCartUI();
+    initCalendar(); // Initialize the calendar
+    setupEventListeners();
+  }
+
+  // Setup event listeners
+  function setupEventListeners() {
+    // Single reservation form listener
+    const reservationForm = document.getElementById('reservationForm');
+    if (reservationForm) {
+      // Remove any existing listeners by cloning and replacing
+      const newForm = reservationForm.cloneNode(true);
+      reservationForm.parentNode.replaceChild(newForm, reservationForm);
+      
+      // Add new listener
+      document.getElementById('reservationForm').addEventListener('submit', handleReservationSubmit);
+    }
+  }
+
+  // Escape HTML to prevent XSS
+  function escapeHtml(unsafe) {
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  // Cart functions
+  function addToCart(name, price) {
+    const existing = cart.find(item => item.name === name);
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.push({ name, price, quantity: 1 });
+    }
+    saveCart();
+    updateCartUI();
+    showToast(`${name} added to cart!`);
+  }
+
+  function removeFromCart(name) {
+    cart = cart.filter(item => item.name !== name);
+    saveCart();
+    updateCartUI();
+  }
+
+  function updateCartUI() {
+    const cartCount = document.getElementById('cartCount');
+    const cartItems = document.getElementById('cartItems');
+    const cartTotal = document.getElementById('cartTotal');
+    
+    cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+    
+    cartItems.innerHTML = '';
+    let total = 0;
+    
+    cart.forEach(item => {
+      const itemTotal = item.price * item.quantity;
+      total += itemTotal;
+      
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `
+        <div>
+          <div style="font-weight:600">${escapeHtml(item.name)}</div>
+          <div style="font-size:12px;color:var(--muted)">₱${item.price} × ${item.quantity}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-weight:600">₱${itemTotal}</div>
+          <button onclick="removeFromCart('${escapeHtml(item.name)}')" style="background:none;border:0;color:#ef4444;cursor:pointer">✕</button>
+        </div>
+      `;
+      cartItems.appendChild(div);
+    });
+    
+    cartTotal.textContent = `Total: ₱${total}`;
+  }
+
+  function saveCart() {
+    localStorage.setItem('restobar_cart', JSON.stringify(cart));
+  }
+
+  function loadCart() {
+    try {
+      const saved = localStorage.getItem('restobar_cart');
+      cart = saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      cart = [];
+    }
+  }
+
+  function toggleCart() {
+    document.getElementById('cartBox').classList.toggle('open');
+  }
+
+  // FIXED: Checkout function using localStorage only
+  async function checkout() {
+    if (cart.length === 0) {
+      alert('Your cart is empty!');
+      return;
+    }
+    
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    try {
+      // Generate a unique order ID
+      const orderId = 'ORD_' + Date.now();
+      
+      // Save order to localStorage
+      const order = {
+        id: orderId,
+        customer_name: customerName,
+        items: [...cart],
+        total_amount: total,
+        status: 'pending',
+        date: new Date().toISOString()
+      };
+      
+      // Get existing orders or initialize empty array
+      const existingOrders = JSON.parse(localStorage.getItem('restobar_orders') || '[]');
+      existingOrders.push(order);
+      localStorage.setItem('restobar_orders', JSON.stringify(existingOrders));
+      
+      alert(`Order placed successfully!\n\nOrder ID: ${orderId}\nTotal: ₱${total}\n\nThank you for your order!`);
+      
+      // Clear cart
+      cart = [];
+      saveCart();
+      updateCartUI();
+      toggleCart();
+      
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Failed to place order. Please try again. Error: ' + error.message);
+    }
+  }
+
+  // Toast notification
+  function showToast(message) {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.cssText = `
+      position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+      background:var(--success); color:#fff; padding:12px 24px;
+      border-radius:8px; font-weight:600; z-index:100;
+      box-shadow:0 4px 12px rgba(0,0,0,0.15);
+    `;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      document.body.removeChild(toast);
+    }, 3000);
+  }
+
+  // Buffet modal functions
+  function openBuffetModal(index) {
+    currentModalIndex = index;
+    const pkg = buffetPackages[index];
+    if (!pkg) return;
+    
+    document.getElementById('buffetTitle').textContent = pkg.name;
+    
+    const details = document.getElementById('buffetDetails');
+    details.innerHTML = `
+      <div class="price" style="margin-bottom:12px">Starting at ₱${(pkg.price||0).toLocaleString()}</div>
+      <h4 style="margin-bottom:8px">Inclusions:</h4>
+      <ul style="color:var(--muted);margin-bottom:16px">
+        ${(pkg.inclusions || []).map(i => `<li>${escapeHtml(i)}</li>`).join('')}
+      </ul>
+      <h4 style="margin-bottom:8px">Rates:</h4>
+      <div class="rates">
+        <table>
+          ${(pkg.rates || []).map(r => `
+            <tr>
+              <td>${r.persons} persons</td>
+              <td style="text-align:right;font-weight:600">₱ ${r.rate.toLocaleString()}</td>
+            </tr>
+          `).join('')}
+        </table>
+      </div>
+    `;
+    
+    const personsSelect = document.getElementById('modalBuffetPersons');
+    personsSelect.innerHTML = '';
+    (pkg.rates || []).forEach(r => {
+      const option = document.createElement('option');
+      option.value = r.persons;
+      option.textContent = `${r.persons} persons - ₱${r.rate.toLocaleString()}`;
+      option.dataset.rate = r.rate;
+      personsSelect.appendChild(option);
+    });
+    
+    // Update price when selection changes
+    personsSelect.addEventListener('change', function() {
+      const selectedOption = this.options[this.selectedIndex];
+      const rate = selectedOption ? Number(selectedOption.dataset.rate) : 0;
+      document.getElementById('modalSelectedPrice').textContent = rate.toLocaleString();
+    });
+    
+    // Trigger initial price update
+    if (personsSelect.options.length > 0) {
+      personsSelect.selectedIndex = 0;
+      personsSelect.dispatchEvent(new Event('change'));
+    }
+    
+    document.getElementById('buffetModal').classList.add('open');
+  }
+
+  function closeBuffetModal() {
+    document.getElementById('buffetModal').classList.remove('open');
+  }
+
+  function redirectToReservationFromModal() {
+    const personsSelect = document.getElementById('modalBuffetPersons');
+    const selectedOption = personsSelect.options[personsSelect.selectedIndex];
+    
+    if (!selectedOption) {
+      alert('Please select a number of persons first');
+      return;
+    }
+    
+    const pkg = buffetPackages[currentModalIndex];
+    const persons = Number(selectedOption.value);
+    const rate = Number(selectedOption.dataset.rate);
+    
+    // Store selected buffet info for reservation form
+    localStorage.setItem('selectedBuffet', JSON.stringify({
+      id: currentModalIndex,
+      name: pkg.name,
+      persons: persons,
+      rate: rate
+    }));
+    
+    // Close modal and scroll to reservation form
+    closeBuffetModal();
+    document.getElementById('reservation').scrollIntoView({behavior: 'smooth'});
+    
+    // Update reservation form with buffet info
+    setTimeout(() => {
+      renderBuffetOptions();
+    }, 500);
+  }
+
+  function renderBuffetOptions() {
+    const buffetOptions = document.getElementById('buffetOptions');
+    const selectedBuffetInfo = document.getElementById('selectedBuffetInfo');
+    const selectedBuffet = JSON.parse(localStorage.getItem('selectedBuffet') || 'null');
+    
+    buffetOptions.innerHTML = '';
+    
+    buffetPackages.forEach((pkg, idx) => {
+      const option = document.createElement('div');
+      option.className = 'buffet-option';
+      if (selectedBuffet && selectedBuffet.id === idx) {
+        option.classList.add('selected');
+      }
+      
+      option.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <strong>${escapeHtml(pkg.name)}</strong>
+            <div class="buffet-price">Starting at ₱${(pkg.price||0).toLocaleString()}</div>
+            <div class="small-note">${(pkg.inclusions || []).slice(0,2).join(', ')}</div>
+          </div>
+          <div>
+            <button class="view-btn" data-idx="${idx}">View</button>
+          </div>
+        </div>
+      `;
+      
+      // Add event listeners
+      option.querySelector('.view-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        openBuffetModal(idx);
+      });
+      
+      option.addEventListener('click', () => {
+        selectBuffetOption(idx);
+      });
+      
+      buffetOptions.appendChild(option);
+    });
+    
+    // Update selected buffet info if exists
+    if (selectedBuffet) {
+      selectedBuffetInfo.style.display = 'block';
+      document.getElementById('selectedBuffetName').textContent = selectedBuffet.name;
+      document.getElementById('selectedBuffetPrice').textContent = selectedBuffet.rate.toLocaleString();
+      
+      const inclusions = buffetPackages[selectedBuffet.id].inclusions || [];
+      document.getElementById('selectedBuffetInclusions').textContent = inclusions.slice(0,3).join(', ');
+      
+      // Populate persons dropdown
+      const personsSelect = document.getElementById('selectedBuffetPersons');
+      personsSelect.innerHTML = '';
+      
+      const pkg = buffetPackages[selectedBuffet.id];
+      (pkg.rates || []).forEach(r => {
+        const option = document.createElement('option');
+        option.value = r.persons;
+        option.textContent = `${r.persons} persons - ₱${r.rate.toLocaleString()}`;
+        option.dataset.rate = r.rate;
+        if (r.persons === selectedBuffet.persons) {
+          option.selected = true;
+        }
+        personsSelect.appendChild(option);
+      });
+      
+      // Update hidden fields
+      document.getElementById('selectedBuffet').value = selectedBuffet.id;
+      document.getElementById('selectedBuffetPriceValue').value = selectedBuffet.rate;
+      document.getElementById('selectedBuffetPersonsValue').value = selectedBuffet.persons;
+      
+      // Update when selection changes
+      personsSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const rate = selectedOption ? Number(selectedOption.dataset.rate) : 0;
+        document.getElementById('selectedBuffetPrice').textContent = rate.toLocaleString();
+        document.getElementById('selectedBuffetPriceValue').value = rate;
+        document.getElementById('selectedBuffetPersonsValue').value = this.value;
+        
+        // Update stored selection
+        const updatedSelection = {...selectedBuffet};
+        updatedSelection.persons = Number(this.value);
+        updatedSelection.rate = rate;
+        localStorage.setItem('selectedBuffet', JSON.stringify(updatedSelection));
+      });
+    } else {
+      selectedBuffetInfo.style.display = 'none';
+    }
+  }
+
+  function selectBuffetOption(idx) {
+    const pkg = buffetPackages[idx];
+    if (!pkg) return;
+    
+    // Select the first rate by default
+    const defaultRate = pkg.rates && pkg.rates.length > 0 ? pkg.rates[0] : {persons: 0, rate: 0};
+    
+    const selection = {
+      id: idx,
+      name: pkg.name,
+      persons: defaultRate.persons,
+      rate: defaultRate.rate
+    };
+    
+    localStorage.setItem('selectedBuffet', JSON.stringify(selection));
+    renderBuffetOptions();
+  }
+
+  function clearBuffetSelection() {
+    localStorage.removeItem('selectedBuffet');
+    renderBuffetOptions();
+  }
+
+  // Download buffet info as text file
+  function downloadBuffetInfo(index) {
+    const pkg = buffetPackages[index];
+    if (!pkg) return;
+    
+    let content = `BUFFET PACKAGE: ${pkg.name}\n`;
+    content += `Starting Price: ₱${(pkg.price||0).toLocaleString()}\n\n`;
+    content += "INCLUSIONS:\n";
+    (pkg.inclusions || []).forEach(i => content += `• ${i}\n`);
+    content += "\nRATES:\n";
+    (pkg.rates || []).forEach(r => content += `• ${r.persons} persons: ₱${r.rate.toLocaleString()}\n`);
+    
+    const blob = new Blob([content], {type: 'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${pkg.name.replace(/\s+/g, '_')}_package.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // FIXED: Reservation form handler using localStorage only
+  async function handleReservationSubmit(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const reservation = {
+      name: formData.get('rName'),
+      contact: formData.get('rContact'),
+      date: formData.get('rDate'),
+      start: formData.get('rStart'),
+      end: formData.get('rEnd'),
+      guests: formData.get('rGuests'),
+      event: formData.get('rEvent'),
+      buffet: formData.get('buffet'),
+      buffetPrice: formData.get('buffetPrice'),
+      buffetPersons: formData.get('buffetPersons')
+    };
+    
+    try {
+      // Calculate total amount
+      const totalAmount = reservation.buffetPrice ? 
+        Number(reservation.buffetPrice) : 0;
+      
+      // Generate reservation ID
+      const reservationId = 'RES_' + Date.now();
+      
+      // Save to localStorage
+      const reservationData = {
+        id: reservationId,
+        customer_name: reservation.name,
+        contact_number: reservation.contact,
+        reservation_date: reservation.date,
+        start_time: reservation.start,
+        end_time: reservation.end,
+        guests: reservation.guests,
+        event_type: reservation.event,
+        buffet_package_id: reservation.buffet || null,
+        buffet_persons: reservation.buffetPersons || null,
+        buffet_price: reservation.buffetPrice || null,
+        total_amount: totalAmount,
+        status: 'pending',
+        date_created: new Date().toISOString()
+      };
+      
+      // Get existing reservations or initialize empty array
+      let reservations = JSON.parse(localStorage.getItem('restobar_reservations') || '[]');
+      reservations.push(reservationData);
+      localStorage.setItem('restobar_reservations', JSON.stringify(reservations));
+      
+      alert('Reservation submitted successfully! We will contact you to confirm your booking.');
+      this.reset();
+      clearBuffetSelection();
+      
+      // Refresh calendar to show new booking
+      loadBookedDates();
+      generateCalendar();
+      
+    } catch (error) {
+      console.error('Reservation error:', error);
+      alert('Failed to submit reservation. Please try again. Error: ' + error.message);
+    }
+  }
+
+  function sendContact(e) {
+    e.preventDefault();
+    alert('Thank you for your message! We will get back to you soon.');
+    e.target.reset();
+  }
+
+  // Initialize when DOM is loaded
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Restobar — Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-light: #10b981;
+      --secondary: #065f46;
+      --light: #f8fafc;
+      --dark: #1e293b;
+      --gray: #64748b;
+      --success: #10b981;
+      --border-radius: 12px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      padding: 20px;
+    }
+
+    .container {
+      display: flex;
+      width: 900px;
+      max-width: 100%;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .brand-section {
+      flex: 1;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-section::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .brand-section::after {
+      content: '';
+      position: absolute;
+      bottom: -80px;
+      left: -80px;
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .logo i {
+      font-size: 32px;
+      margin-right: 12px;
+    }
+
+    .logo h1 {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .brand-section h2 {
+      font-size: 24px;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .brand-section p {
+      font-size: 16px;
+      line-height: 1.6;
+      opacity: 0.9;
+    }
+
+    .features {
+      margin-top: 30px;
+    }
+
+    .feature {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .feature i {
+      margin-right: 10px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .card {
+      flex: 1;
+      background: white;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .card h2 {
+      color: var(--dark);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: var(--gray);
+      margin-bottom: 30px;
+      font-size: 15px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .input-with-icon {
+      position: relative;
+    }
+
+    .input-with-icon i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px 15px 14px 45px;
+      border-radius: var(--border-radius);
+      border: 1px solid #ddd;
+      font-size: 15px;
+      transition: var(--transition);
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border-radius: var(--border-radius);
+      border: 0;
+      background: var(--primary);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button i {
+      margin-right: 8px;
+    }
+
+    button:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+    }
+
+    .demo-accounts {
+      background: #f8fafc;
+      padding: 15px;
+      border-radius: var(--border-radius);
+      margin-top: 25px;
+      font-size: 13px;
+      color: var(--gray);
+      border-left: 4px solid var(--primary-light);
+    }
+
+    .demo-accounts h4 {
+      margin-bottom: 8px;
+      color: var(--dark);
+    }
+
+    .demo-account {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 25px 0;
+      color: var(--gray);
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #ddd;
+    }
+
+    .divider span {
+      padding: 0 15px;
+      font-size: 14px;
+    }
+
+    .register-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .register-link a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .register-link a:hover {
+      color: var(--secondary);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      
+      .brand-section {
+        padding: 30px;
+      }
+      
+      .card {
+        padding: 30px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .brand-section, .card {
+        padding: 25px;
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+
+    .message {
+      box-sizing: border-box;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 20px;
+    }
+
+    .modal {
+      width: 480px;
+      max-width: 100%;
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.25s ease;
+    }
+
+    .modal h3 {
+      margin-bottom: 6px;
+    }
+
+    .modal .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .btn-secondary {
+      background: #ecfdf5;
+      color: var(--dark);
+      border: 1px solid #d1fae5;
+    }
+
+    .small-note {
+      font-size: 13px;
+      color: var(--gray);
+      margin-top: 8px;
+    }
+
+    .error-text {
+      color: #dc2626;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .success-text {
+      color: #059669;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="brand-section">
+      <div class="logo fade-in">
+        <i class="fas fa-utensils"></i>
+        <h1>Restobar</h1>
+      </div>
+      <h2 class="fade-in delay-1">Welcome Back!</h2>
+      <p class="fade-in delay-1">Sign in to manage your restaurant operations, track orders, and serve your customers better.</p>
+      
+      <div class="features fade-in delay-2">
+        <div class="feature">
+          <span>Manage orders and reservations</span>
+        </div>
+        <div class="feature">
+          <span>Track sales and performance</span>
+        </div>
+        <div class="feature">
+          <span>Update menu and pricing</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="fade-in">Login to Your Account</h2>
+      <p class="subtitle fade-in delay-1">Enter your credentials to access the dashboard</p>
+      
+      <form id="loginForm" novalidate>
+        <div class="form-group fade-in delay-1">
+          <label for="role">Login as</label>
+          <div class="input-with-icon">
+            <i class="fas fa-user-tag"></i>
+            <select id="role" name="role" required>
+              <option value="">-- Select Role --</option>
+              <option value="admin">Admin</option>
+              <option value="staff">Staff</option>
+              <option value="customer">Customer</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="usernameBox" class="form-group fade-in" style="display:none">
+          <label for="username">Username</label>
+          <div class="input-with-icon">
+            <i class="fas fa-user"></i>
+            <input id="username" name="username" type="text" autocomplete="username" placeholder="Enter your username" />
+          </div>
+        </div>
+
+        <div id="emailBox" class="form-group fade-in">
+          <label for="email">Email</label>
+          <div class="input-with-icon">
+            <i class="fas fa-envelope"></i>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="Enter your email address" />
+          </div>
+        </div>
+
+        <div class="form-group fade-in delay-2">
+          <label for="password">Password</label>
+          <div class="input-with-icon">
+            <i class="fas fa-lock"></i>
+            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" />
+          </div>
+        </div>
+
+        <button type="submit" class="fade-in delay-2">
+          <i class="fas fa-sign-in-alt"></i> <span id="submitText">Sign In</span>
+        </button>
+      </form>
+
+      <div class="demo-accounts fade-in delay-3">
+        <h4>Demo Accounts</h4>
+        <div class="demo-account">
+          <span>Admin</span>
+          <span>admin / Admin123!</span>
+        </div>
+        <div class="demo-account">
+          <span>Staff 1</span>
+          <span>staff1 / Staff123!</span>
+        </div>
+        <div class="demo-account">
+          <span>Staff 2</span>
+          <span>staff2 / Staff456!</span>
+        </div>
+        <div class="demo-account">
+          <span>Customer</span>
+          <span>customer@example.com / Customer123!</span>
+        </div>
+      </div>
+
+      <div class="divider fade-in delay-3">
+        <span>OR</span>
+      </div>
+
+      <div class="register-link fade-in delay-3">
+        <a href="#" id="openRegister">
+          <i class="fas fa-user-plus"></i> Create Customer Account
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Registration Modal -->
+  <div class="modal-backdrop" id="registerModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="regTitle">
+      <h3 id="regTitle">Create Customer Account</h3>
+      <p class="small-note">Create an account to make reservations and order faster.</p>
+
+      <form id="registerForm" novalidate>
+        <div class="form-group">
+          <label for="regName">Full name</label>
+          <div class="input-with-icon">
+            <i class="fas fa-user"></i>
+            <input id="regName" name="name" type="text" placeholder="e.g. Maria Santos" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="regEmail">Email</label>
+          <div class="input-with-icon">
+            <i class="fas fa-envelope"></i>
+            <input id="regEmail" name="email" type="email" placeholder="you@example.com" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="regPhone">Contact number (optional)</label>
+          <div class="input-with-icon">
+            <i class="fas fa-phone"></i>
+            <input id="regPhone" name="phone" type="tel" placeholder="+63 912 345 6789" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="regPassword">Password</label>
+          <div class="input-with-icon">
+            <i class="fas fa-lock"></i>
+            <input id="regPassword" name="password" type="password" placeholder="Create a password (min 6 chars)" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="regPassword2">Confirm password</label>
+          <div class="input-with-icon">
+            <i class="fas fa-lock"></i>
+            <input id="regPassword2" name="password2" type="password" placeholder="Re-enter password" required />
+          </div>
+        </div>
+
+        <div id="regMessage" class="hidden"></div>
+
+        <div class="modal-actions">
+          <button type="button" id="cancelRegister" class="btn-secondary" style="flex:1">Cancel</button>
+          <button type="submit" style="flex:1"><i class="fas fa-user-plus"></i> Create Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const roleEl = document.getElementById('role');
+    const usernameBox = document.getElementById('usernameBox');
+    const emailBox = document.getElementById('emailBox');
+    const usernameEl = document.getElementById('username');
+    const emailEl = document.getElementById('email');
+    const passwordEl = document.getElementById('password');
+    const loginForm = document.getElementById('loginForm');
+    const submitText = document.getElementById('submitText');
+
+    const regModal = document.getElementById('registerModal');
+    const openRegister = document.getElementById('openRegister');
+    const registerForm = document.getElementById('registerForm');
+    const cancelRegister = document.getElementById('cancelRegister');
+    const regMessage = document.getElementById('regMessage');
+
+    // Initialize required states
+    usernameEl.required = false; // username only required for admin/staff
+    emailEl.required = true;     // customer default
+
+    if (!loginForm) {
+      console.error('Login form not found');
+      return;
+    }
+
+    function animateFormElements() {
+      const elements = document.querySelectorAll('.fade-in');
+      elements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(10px)';
+        setTimeout(() => {
+          el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, 80);
+      });
+    }
+
+    roleEl.addEventListener('change', () => {
+      const r = roleEl.value;
+      if (r === 'admin' || r === 'staff') {
+        usernameBox.style.display = 'block';
+        emailBox.style.display = 'none';
+        emailEl.required = false;
+        usernameEl.required = true;
+      } else {
+        usernameBox.style.display = 'none';
+        emailBox.style.display = 'block';
+        emailEl.required = true;
+        usernameEl.required = false;
+      }
+      animateFormElements();
+    });
+
+    function showMessage(targetForm, message, type = 'error') {
+      if (targetForm === loginForm) {
+        const existingMsg = document.querySelector('.message');
+        if (existingMsg) existingMsg.remove();
+
+        const messageEl = document.createElement('div');
+        messageEl.className = `message fade-in ${type}`;
+        messageEl.textContent = message;
+        messageEl.style.cssText = `
+          padding: 12px 15px;
+          border-radius: var(--border-radius);
+          margin-bottom: 20px;
+          font-weight: 500;
+          text-align: center;
+          background: ${type === 'success' ? '#ecfdf5' : '#fef2f2'};
+          color: ${type === 'success' ? '#059669' : '#dc2626'};
+          border-left: 4px solid ${type === 'success' ? '#10b981' : '#ef4444'};
+        `;
+        loginForm.prepend(messageEl);
+
+        setTimeout(() => {
+          if (messageEl.parentNode) {
+            messageEl.style.opacity = '0';
+            messageEl.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => { if (messageEl.parentNode) messageEl.remove(); }, 300);
+          }
+        }, 3000);
+      } else {
+        regMessage.classList.remove('hidden');
+        regMessage.textContent = message;
+        regMessage.className = (type === 'success') ? 'success-text' : 'error-text';
+      }
+    }
+
+    function setLoading(isLoading, submitBtn) {
+      if (isLoading) {
+        submitBtn.disabled = true;
+        submitText.textContent = 'Signing In...';
+        submitBtn.querySelector('i')?.classList.add('fa-spinner', 'fa-spin');
+      } else {
+        submitBtn.disabled = false;
+        submitText.textContent = 'Sign In';
+        submitBtn.querySelector('i')?.classList.remove('fa-spinner', 'fa-spin');
+      }
+    }
+
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const submitBtn = loginForm.querySelector('button[type="submit"]');
+      if (!submitBtn) {
+        console.error('Submit button not found');
+        return;
+      }
+
+      const role = roleEl.value;
+      const pw = passwordEl.value.trim();
+
+      if (!role) {
+        showMessage(loginForm, 'Please select a role', 'error');
+        return;
+      }
+
+      const data = {
+        role: role,
+        password: pw
+      };
+      if (role === 'admin' || role === 'staff') {
+        const u = usernameEl.value.trim();
+        if (!u) {
+          showMessage(loginForm, 'Please enter your username', 'error');
+          return;
+        }
+        data.username = u;
+      } else if (role === 'customer') {
+        const eaddr = emailEl.value.trim();
+        if (!eaddr) {
+          showMessage(loginForm, 'Please enter your email', 'error');
+          return;
+        }
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(eaddr)) {
+          showMessage(loginForm, 'Please enter a valid email address', 'error');
+          return;
+        }
+        data.email = eaddr;
+      }
+
+      if (!pw) {
+        showMessage(loginForm, 'Please enter your password', 'error');
+        return;
+      }
+
+      setLoading(true, submitBtn);
+
+      fetch('http://localhost:8080/restobar/login.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(result => {
+        setLoading(false, submitBtn);
+        if (result.success) {
+          showMessage(loginForm, 'Login successful! Redirecting...', 'success');
+          const user = result.user;
+          let redirectUrl = '';
+          if (role === 'admin') {
+            redirectUrl = 'admin.html?user=' + encodeURIComponent(user.username);
+          } else if (role === 'staff') {
+            redirectUrl = 'staff.html?user=' + encodeURIComponent(user.name) + '&uname=' + encodeURIComponent(user.username);
+          } else if (role === 'customer') {
+            redirectUrl = 'customer.html?user=' + encodeURIComponent(user.name) + '&email=' + encodeURIComponent(user.email);
+          }
+          setTimeout(() => {
+            window.location.href = redirectUrl;
+          }, 700);
+        } else {
+          showMessage(loginForm, result.error || 'Invalid credentials', 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Login fetch error:', error);
+        setLoading(false, submitBtn);
+        showMessage(loginForm, 'An error occurred. Please try again.', 'error');
+      });
+    });
+
+    openRegister.addEventListener('click', function(e) {
+      e.preventDefault();
+      regMessage.className = 'hidden';
+      regMessage.textContent = '';
+      registerForm.reset();
+      regModal.style.display = 'flex';
+      regModal.setAttribute('aria-hidden', 'false');
+      setTimeout(() => document.getElementById('regName').focus(), 120);
+    });
+
+    cancelRegister.addEventListener('click', function(e) {
+      e.preventDefault();
+      regModal.style.display = 'none';
+      regModal.setAttribute('aria-hidden', 'true');
+    });
+
+    regModal.addEventListener('click', function(e) {
+      if (e.target === regModal) {
+        regModal.style.display = 'none';
+        regModal.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    registerForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const pw = document.getElementById('regPassword').value;
+  const pw2 = document.getElementById('regPassword2').value;
+
+  if (!name) {
+    showMessage(regMessage, 'Please enter your full name', 'error');
+    return;
+  }
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !emailPattern.test(email)) {
+    showMessage(regMessage, 'Please enter a valid email address', 'error');
+    return;
+  }
+  if (!pw || pw.length < 6) {
+    showMessage(regMessage, 'Password must be at least 6 characters', 'error');
+    return;
+  }
+  if (pw !== pw2) {
+    showMessage(regMessage, 'Passwords do not match', 'error');
+    return;
+  }
+
+  // ADD PROPER ERROR HANDLING HERE
+  fetch('http://localhost:8080/restobar/register.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, phone, password: pw })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(result => {
+    console.log('Registration result:', result); // Debug log
+    if (result.success) {
+      showMessage(regMessage, 'Account created successfully! You can now login.', 'success');
+      setTimeout(() => {
+        regModal.style.display = 'none';
+        regModal.setAttribute('aria-hidden', 'true');
+        roleEl.value = 'customer';
+        roleEl.dispatchEvent(new Event('change'));
+        emailEl.value = email;
+        passwordEl.value = '';
+        showMessage(loginForm, 'Account created — please sign in with your email and password.', 'success');
+      }, 900);
+    } else {
+      // SHOW THE ACTUAL ERROR FROM BACKEND
+      showMessage(regMessage, result.error || 'Failed to create account', 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Registration fetch error:', error);
+    showMessage(regMessage, 'Registration failed: ' + error.message, 'error');
+  });
+});
+
+    const elements = document.querySelectorAll('.fade-in');
+    elements.forEach((el, index) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(10px)';
+      setTimeout(() => {
+        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }, index * 100);
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Admin — Restobar</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --panel: #ffffff;
+      --panel-hover: #f1f5f9;
+      --text: #1e293b;
+      --muted: #64748b;
+      --accent: #10b981;
+      --accent-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --highlight: #059669;
+      --radius: 12px;
+      --gap: 20px;
+      --sidebar-width: 260px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body, html {
+      height: 100%;
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Layout */
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    aside {
+      width: var(--sidebar-width);
+      background: var(--panel);
+      padding: 24px 0;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow);
+      z-index: 10;
+    }
+    
+    main {
+      flex: 1;
+      padding: 0;
+      overflow-y: auto;
+      background: var(--bg);
+    }
+
+    /* Sidebar */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 24px 24px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .logo {
+      background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: white;
+      font-size: 16px;
+    }
+    
+    .brand-text h1 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    
+    .brand-text div {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    
+    nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 16px 0;
+    }
+    
+    nav a {
+      padding: 12px 24px;
+      color: var(--muted);
+      transition: var(--transition);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-left: 3px solid transparent;
+      font-weight: 500;
+    }
+    
+    nav a:hover {
+      background: var(--panel-hover);
+      color: var(--text);
+    }
+    
+    nav a.active {
+      background: var(--accent-light);
+      color: var(--accent);
+      border-left-color: var(--accent);
+      font-weight: 600;
+    }
+    
+    nav a i {
+      width: 20px;
+      text-align: center;
+      font-size: 16px;
+    }
+    
+    .logout {
+      margin-top: auto;
+      border-top: 1px solid #e2e8f0;
+      padding: 16px 24px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: var(--transition);
+      color: var(--muted);
+      font-weight: 500;
+    }
+    
+    .logout:hover {
+      background: var(--panel-hover);
+      color: var(--text);
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 30px;
+      background: var(--panel);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 0;
+    }
+    
+    .search {
+      position: relative;
+      flex: 1;
+      max-width: 400px;
+    }
+    
+    .search i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+    }
+    
+    .search input {
+      padding: 12px 16px 12px 42px;
+      border-radius: var(--radius);
+      border: 1px solid #e2e8f0;
+      width: 100%;
+      background: var(--bg);
+      color: var(--text);
+      transition: var(--transition);
+      font-size: 14px;
+    }
+    
+    .search input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    
+    .user-info {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .user-name {
+      font-weight: 600;
+      font-size: 15px;
+    }
+    
+    .user-role {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Content area */
+    #contentArea {
+      padding: 30px;
+    }
+
+    /* Cards & grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--gap);
+      margin-bottom: 30px;
+    }
+    
+    .card {
+      background: var(--panel);
+      padding: 24px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border-top: 4px solid var(--accent);
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .card h3 {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .card .value {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Two-column layout for content */
+    .two-col {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--gap);
+    }
+    
+    @media (max-width: 900px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--panel);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 14px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    
+    th {
+      background: #f8fafc;
+      color: var(--text);
+      font-weight: 600;
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover {
+      background: #f8fafc;
+    }
+
+    /* Status badges */
+    .status {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      gap: 6px;
+    }
+    
+    .status:before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    
+    .status-pending {
+      background: var(--warning-light);
+      color: #92400e;
+    }
+    
+    .status-pending:before {
+      background: var(--warning);
+    }
+    
+    .status-approved, .status-confirmed {
+      background: var(--success-light);
+      color: #065f46;
+    }
+    
+    .status-approved:before, .status-confirmed:before {
+      background: var(--success);
+    }
+    
+    .status-rejected, .status-cancelled {
+      background: var(--danger-light);
+      color: #991b1b;
+    }
+    
+    .status-rejected:before, .status-cancelled:before {
+      background: var(--danger);
+    }
+
+    /* Forms & buttons */
+    .row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    input[type="text"], input[type="number"], input[type="date"], input[type="time"], select, textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      border: 1px solid #e2e8f0;
+      background: var(--panel);
+      color: var(--text);
+      transition: var(--transition);
+      font-size: 14px;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    
+    button {
+      background: var(--accent);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      border: 0;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+    
+    button:hover {
+      background: #059669;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    
+    button.ghost {
+      background: transparent;
+      border: 1px solid #e2e8f0;
+      color: var(--text);
+    }
+    
+    button.ghost:hover {
+      background: #f8fafc;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .small {
+      padding: 8px 14px;
+      font-size: 13px;
+      border-radius: 10px;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      color: white;
+      font-weight: 600;
+      z-index: 1000;
+      box-shadow: var(--shadow-lg);
+      animation: slideInRight 0.3s ease;
+      max-width: 400px;
+    }
+    
+    .toast.success {
+      background: var(--success);
+    }
+    
+    .toast.error {
+      background: var(--danger);
+    }
+    
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* Loading spinner */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #ffffff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Section headers */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    
+    .section-header h2 {
+      font-weight: 700;
+      color: var(--text);
+      font-size: 24px;
+    }
+
+    /* helpers */
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .center {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .pill {
+      background: #f1f5f9;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--text);
+    }
+    
+    .empty {
+      color: var(--muted);
+      padding: 40px;
+      text-align: center;
+      background: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    
+    .empty i {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    /* Modal styles */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .modal {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      width: 500px;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .modal h3 {
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+    
+    .form-group {
+      margin-bottom: 16px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* Buffet package specific styles */
+    .buffet-rates {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f8fafc;
+      border-radius: var(--radius);
+    }
+    
+    .rate-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 12px;
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid #e2e8f0;
+    }
+    
+    .rate-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .rate-inputs {
+      display: flex;
+      gap: 12px;
+      flex: 1;
+    }
+    
+    .rate-inputs input {
+      flex: 1;
+    }
+    
+    .inclusion-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .inclusion-item input {
+      flex: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .app {
+        flex-direction: column;
+      }
+      
+      aside {
+        width: 100%;
+        padding: 16px 0;
+      }
+      
+      nav {
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 12px;
+        gap: 0;
+      }
+      
+      nav a {
+        padding: 12px 16px;
+        white-space: nowrap;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+      }
+      
+      nav a.active {
+        border-left: none;
+        border-bottom-color: var(--accent);
+      }
+      
+      header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: stretch;
+      }
+      
+      .search {
+        max-width: 100%;
+      }
+      
+      .rate-inputs {
+        flex-direction: column;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.4s ease forwards;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside>
+      <div class="brand">
+        <div class="logo">VR</div>
+        <div class="brand-text">
+          <h1>Vine RestoBar</h1>
+          <div>Dashboard</div>
+        </div>
+      </div>
+
+      <nav id="sidebarNav"></nav>
+      <a href="auth.html" class="logout">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+      </a>
+    </aside>
+
+    <!-- Main area -->
+    <main>
+      <header>
+        <div class="search">
+          <i class="fas fa-search"></i>
+          <input id="searchInput" type="text" placeholder="Search orders, menu, customers...">
+        </div>
+
+        <div class="user">
+          <div class="avatar" id="avatarText">AU</div>
+          <div class="user-info">
+            <div class="user-name" id="displayName">Admin User</div>
+            <div class="user-role">Manager</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- dynamic content container -->
+      <div id="contentArea"></div>
+    </main>
+  </div>
+
+<script>
+// ===== Toast Notification =====
+function showToast(message, type = 'success') {
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.remove();
+  }, 4000);
+}
+
+// ===== Loading State =====
+function setLoading(button, isLoading, text = 'Processing...') {
+  if (isLoading) {
+    button.disabled = true;
+    button.innerHTML = `<div class="loading"></div> ${text}`;
+  } else {
+    button.disabled = false;
+    const icon = text.includes('Create') ? 'fa-user-plus' : 
+                 text.includes('Add') ? 'fa-plus' : 
+                 text.includes('Save') ? 'fa-save' : 'fa-check';
+    button.innerHTML = `<i class="fas ${icon}"></i> ${text.replace('Processing...', '').trim()}`;
+  }
+}
+
+// ===== Data State =====
+const state = {
+  user: {name: new URLSearchParams(location.search).get('user') || 'Admin User'},
+  sidebar: [
+    {id: 'overview', label: 'Overview', active: true, icon: 'fas fa-chart-pie'},
+    {id: 'menu', label: 'Menu', icon: 'fas fa-utensils'},
+    {id: 'buffet', label: 'Buffet Packages', icon: 'fas fa-utensil-spoon'},
+    {id: 'staff', label: 'Staff Accounts', icon: 'fas fa-users'},
+    {id: 'reports', label: 'Reports', icon: 'fas fa-chart-bar'},
+    {id: 'settings', label: 'Settings', icon: 'fas fa-cog'},
+  ],
+  menu: [
+    {id: 1, name: 'Spaghetti Carbonara', price: 12.99, category: 'Pasta', description: 'Creamy pasta with bacon and cheese', stock: 50, active: true},
+    {id: 2, name: 'Grilled Salmon', price: 18.50, category: 'Seafood', description: 'Fresh salmon with herbs and lemon', stock: 25, active: true},
+    {id: 3, name: 'Caesar Salad', price: 9.99, category: 'Salad', description: 'Fresh greens with Caesar dressing', stock: 30, active: true}
+  ],
+  buffetPackages: [
+    {id: 1, name: 'All-In', price: 41000, inclusions: [
+      "Buffet — 3 Dishes, 1 side dish, Dessert, Rice, Drinks",
+      "Table and Dining Set-up",
+      "Backdrop",
+      "Host, Spinner & Singer",
+      "Sound System",
+      "Attentive Staff"
+    ]},
+    {id: 2, name: 'Classic', price: 24999, inclusions: [
+      "Buffet — 3 Dishes, 1 side dish, Dessert, Rice, Drinks",
+      "Table and Dining Set-up",
+      "Backdrop",
+      "Sound System",
+      "Attentive Staff"
+    ]},
+    {id: 3, name: 'Intimate', price: 12999, inclusions: [
+      "Buffet — 3 Dishes, 1 side dish, Dessert, Rice, Drinks",
+      "Table and Dining Set-up",
+      "Attentive Staff"
+    ]}
+  ],
+  staff: [
+    {username: 'admin', name: 'Admin User', role: 'admin', email: 'admin@vinerestobar.com'},
+    {username: 'john_doe', name: 'John Doe', role: 'staff', email: 'john@vinerestobar.com'},
+    {username: 'jane_smith', name: 'Jane Smith', role: 'staff', email: 'jane@vinerestobar.com'}
+  ]
+};
+
+// ===== Helper Functions =====
+function el(tag, attrs = {}, html = '') {
+  const e = document.createElement(tag);
+  for (const k in attrs) {
+    if (k.startsWith('on') && typeof attrs[k] === 'function') e.addEventListener(k.slice(2), attrs[k]);
+    else if (k === 'style') e.style.cssText = attrs[k];
+    else e.setAttribute(k, attrs[k]);
+  }
+  if (html) e.innerHTML = html;
+  return e;
+}
+
+function escapeHtml(unsafe) {
+  if (unsafe === null || unsafe === undefined) {
+    return '';
+  }
+  return String(unsafe)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function currentView() { 
+  const a = state.sidebar.find(s => s.active); 
+  return a ? a.id : 'overview'; 
+}
+
+// ===== Sidebar Navigation =====
+function renderSidebar() {
+  const nav = document.getElementById('sidebarNav'); 
+  nav.innerHTML = '';
+  state.sidebar.forEach(item => {
+    const a = el('a', {onclick: (e) => { e.preventDefault(); setActive(item.id); }}, 
+      `<i class="${item.icon}"></i><span>${item.label}</span>`);
+    if (item.active) a.classList.add('active');
+    nav.appendChild(a);
+  });
+}
+
+function setActive(id) {
+  state.sidebar.forEach(s => s.active = (s.id === id));
+  renderSidebar();
+  renderView(id);
+}
+
+// ===== View Renderer =====
+function renderView(view) {
+  const container = document.getElementById('contentArea');
+  container.innerHTML = '';
+  container.classList.add('fade-in');
+  
+  setTimeout(() => {
+    container.classList.remove('fade-in');
+  }, 500);
+
+  if (view === 'overview') {
+    renderOverview(container);
+  } else if (view === 'staff') {
+    renderStaffView(container);
+  } else if (view === 'menu') {
+    renderMenuView(container);
+  } else if (view === 'buffet') {
+    renderBuffetView(container);
+  } else {
+    // For other views, show placeholder
+    container.innerHTML = `
+      <div class="section-header">
+        <h2>${view.charAt(0).toUpperCase() + view.slice(1)}</h2>
+      </div>
+      <div class="card">
+        <h3>${view.charAt(0).toUpperCase() + view.slice(1)} Management</h3>
+        <div class="muted">This section is under development.</div>
+      </div>
+    `;
+  }
+}
+
+// ===== Overview Dashboard =====
+function renderOverview(container) {
+  container.innerHTML = `
+    <div class="section-header">
+      <h2>Dashboard Overview</h2>
+    </div>
+    
+    <div class="grid">
+      <div class="card">
+        <h3>Total Revenue</h3>
+        <div class="value">₱24,580</div>
+        <div class="muted">+12% from last month</div>
+      </div>
+      <div class="card">
+        <h3>Active Reservations</h3>
+        <div class="value">18</div>
+        <div class="muted">5 pending confirmation</div>
+      </div>
+      <div class="card">
+        <h3>Menu Items</h3>
+        <div class="value">${state.menu.length}</div>
+        <div class="muted">${state.menu.filter(m => m.active).length} active</div>
+      </div>
+      <div class="card">
+        <h3>Staff Members</h3>
+        <div class="value">${state.staff.length}</div>
+        <div class="muted">${state.staff.filter(s => s.role === 'staff').length} staff, ${state.staff.filter(s => s.role === 'admin').length} admin</div>
+      </div>
+    </div>
+    
+    <div class="two-col">
+      <div class="card">
+        <h3>Recent Reservations</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Date</th>
+              <th>Package</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Maria Santos</td>
+              <td>2023-10-15</td>
+              <td>All-In</td>
+              <td><span class="status status-confirmed">Confirmed</span></td>
+            </tr>
+            <tr>
+              <td>Juan Dela Cruz</td>
+              <td>2023-10-20</td>
+              <td>Classic</td>
+              <td><span class="status status-pending">Pending</span></td>
+            </tr>
+            <tr>
+              <td>Ana Reyes</td>
+              <td>2023-10-25</td>
+              <td>Intimate</td>
+              <td><span class="status status-confirmed">Confirmed</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="card">
+        <h3>Popular Menu Items</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Orders</th>
+              <th>Revenue</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Spaghetti Carbonara</td>
+              <td>42</td>
+              <td>₱545.58</td>
+            </tr>
+            <tr>
+              <td>Grilled Salmon</td>
+              <td>38</td>
+              <td>₱703.00</td>
+            </tr>
+            <tr>
+              <td>Caesar Salad</td>
+              <td>35</td>
+              <td>₱349.65</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ===== Staff Management =====
+function renderStaffView(container) {
+  const header = el('div', {class: 'section-header'});
+  header.innerHTML = `<h2>Staff Management</h2>`;
+  container.appendChild(header);
+  
+  const staffCard = el('div', {class: 'card'}, 
+    `<h3>Staff Accounts</h3>
+     <div class="muted" style="margin:8px 0">Manage staff and admin users</div>
+     <div style="overflow-x:auto">
+       <table id="staffTable">
+         <thead>
+           <tr>
+             <th>Username</th>
+             <th>Name</th>
+             <th>Role</th>
+             <th>Email</th>
+             <th>Actions</th>
+           </tr>
+         </thead>
+         <tbody></tbody>
+       </table>
+     </div>`
+  );
+  container.appendChild(staffCard);
+
+  const createCard = el('div', {class: 'card', style: 'margin-top:20px'}, 
+    `<h3>Create New Staff Account</h3>
+     <form id="createStaffForm" onsubmit="return false;">
+       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+         <div class="form-group">
+           <label>Username *</label>
+           <input id="s_username" name="username" placeholder="Enter username" required/>
+         </div>
+         <div class="form-group">
+           <label>Password *</label>
+           <input id="s_password" name="password" type="password" placeholder="Enter password" required minlength="6"/>
+         </div>
+         <div class="form-group">
+           <label>Full Name *</label>
+           <input id="s_name" name="name" placeholder="Enter full name" required/>
+         </div>
+         <div class="form-group">
+           <label>Email *</label>
+           <input id="s_email" name="email" type="email" placeholder="Enter email address" required/>
+         </div>
+         <div class="form-group">
+           <label>Role</label>
+           <select id="s_role" name="role">
+             <option value="staff">Staff</option>
+             <option value="admin">Admin</option>
+           </select>
+         </div>
+         <div style="display: flex; align-items: end;">
+           <button type="submit" id="createStaffBtn" style="width: 100%;">
+             <i class="fas fa-user-plus"></i> Create Staff Account
+           </button>
+         </div>
+       </div>
+     </form>`
+  );
+  container.appendChild(createCard);
+
+  updateStaffTable();
+  document.getElementById('createStaffForm').addEventListener('submit', createStaffAccount);
+}
+
+// ===== Menu Management =====
+function renderMenuView(container) {
+  const header = el('div', {class: 'section-header'});
+  header.innerHTML = `<h2>Menu Management</h2>`;
+  container.appendChild(header);
+  
+  // Menu Items Card
+  const menuCard = el('div', {class: 'card'}, 
+    `<h3>Menu Items</h3>
+     <div class="muted" style="margin:8px 0">Manage your restaurant menu items</div>
+     <div style="overflow-x:auto">
+       <table id="menuTable">
+         <thead>
+           <tr>
+             <th>ID</th>
+             <th>Name</th>
+             <th>Price</th>
+             <th>Category</th>
+             <th>Description</th>
+             <th>Stock</th>
+             <th>Active</th>
+             <th>Actions</th>
+           </tr>
+         </thead>
+         <tbody></tbody>
+       </table>
+     </div>
+     <div style="margin-top:16px">
+       <button onclick="showAddMenuItemModal()">
+         <i class="fas fa-plus"></i> Add Menu Item
+       </button>
+     </div>`
+  );
+  container.appendChild(menuCard);
+
+  updateMenuTable();
+}
+
+// ===== Buffet Packages Management =====
+function renderBuffetView(container) {
+  const header = el('div', {class: 'section-header'});
+  header.innerHTML = `<h2>Buffet Packages Management</h2>`;
+  container.appendChild(header);
+  
+  // Buffet Packages Card
+  const buffetCard = el('div', {class: 'card'}, 
+    `<h3>Buffet Packages</h3>
+     <div class="muted" style="margin:8px 0">Manage your buffet packages for customer reservations</div>
+     <div style="overflow-x:auto">
+       <table id="buffetTable">
+         <thead>
+           <tr>
+             <th>Name</th>
+             <th>Base Price</th>
+             <th>Inclusions</th>
+             <th>Actions</th>
+           </tr>
+         </thead>
+         <tbody></tbody>
+       </table>
+     </div>
+     <div style="margin-top:16px">
+       <button onclick="showAddBuffetPackageModal()">
+         <i class="fas fa-plus"></i> Add Buffet Package
+       </button>
+     </div>`
+  );
+  container.appendChild(buffetCard);
+
+  updateBuffetTable();
+}
+
+// ===== Staff Data Management =====
+function updateStaffTable() {
+  const tbody = document.querySelector('#staffTable tbody');
+  if (!tbody) return;
+  
+  if (state.staff && state.staff.length > 0) {
+    tbody.innerHTML = '';
+    state.staff.forEach(user => {
+      const tr = el('tr', {}, 
+        `<td>${escapeHtml(user.username)}</td>
+         <td>${escapeHtml(user.name)}</td>
+         <td><span class="pill">${escapeHtml(user.role)}</span></td>
+         <td>${escapeHtml(user.email)}</td>
+         <td>
+           <div class="actions">
+             <button class="small" onclick="editStaff('${escapeHtml(user.username)}')">
+               <i class="fas fa-edit"></i> Edit
+             </button>
+             <button class="small ghost" onclick="deleteStaff('${escapeHtml(user.username)}')">
+               <i class="fas fa-trash"></i> Remove
+             </button>
+           </div>
+         </td>`
+      );
+      tbody.appendChild(tr);
+    });
+  } else {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align:center;padding:40px">
+          <div class="empty">
+            <i class="fas fa-users"></i>
+            <div>No staff accounts found</div>
+          </div>
+        </td>
+      </tr>
+    `;
+  }
+}
+
+function createStaffAccount(e) {
+  e.preventDefault();
+  const form = document.getElementById('createStaffForm');
+  const btn = document.getElementById('createStaffBtn');
+  
+  const username = document.getElementById('s_username').value.trim();
+  const password = document.getElementById('s_password').value;
+  const name = document.getElementById('s_name').value.trim();
+  const email = document.getElementById('s_email').value.trim();
+  const role = document.getElementById('s_role').value;
+  
+  if (!username || !password || !name || !email) {
+    showToast('Please fill all required fields', 'error');
+    return;
+  }
+  
+  if (state.staff.find(u => u.username === username)) {
+    showToast('Username already exists', 'error');
+    return;
+  }
+  
+  if (state.staff.find(u => u.email === email)) {
+    showToast('Email already exists', 'error');
+    return;
+  }
+  
+  setLoading(btn, true);
+  
+  // Simulate API call
+  setTimeout(() => {
+    const newUser = {username, name, email, role};
+    state.staff.push(newUser);
+    
+    setLoading(btn, false);
+    form.reset();
+    updateStaffTable();
+    showToast(`Staff account created successfully for ${name}`);
+  }, 1500);
+}
+
+function editStaff(username) {
+  const user = state.staff.find(u => u.username === username);
+  if (!user) return;
+  
+  showToast(`Edit functionality for ${user.name} would open here`, 'success');
+}
+
+function deleteStaff(username) {
+  const user = state.staff.find(u => u.username === username);
+  if (!user) return;
+  
+  if (confirm(`Are you sure you want to remove ${user.name}?`)) {
+    state.staff = state.staff.filter(u => u.username !== username);
+    updateStaffTable();
+    showToast(`Staff account removed successfully`);
+  }
+}
+
+// ===== Menu Data Management =====
+function updateMenuTable() {
+  const tbody = document.querySelector('#menuTable tbody');
+  if (!tbody) return;
+  
+  if (state.menu && state.menu.length > 0) {
+    tbody.innerHTML = '';
+    state.menu.forEach(item => {
+      const tr = el('tr', {}, 
+        `<td>${item.id}</td>
+         <td>${escapeHtml(item.name)}</td>
+         <td>₱${item.price.toFixed(2)}</td>
+         <td>${escapeHtml(item.category)}</td>
+         <td>${escapeHtml(item.description)}</td>
+         <td>${item.stock}</td>
+         <td><span class="status ${item.active ? 'status-approved' : 'status-rejected'}">${item.active ? 'Active' : 'Inactive'}</span></td>
+         <td>
+           <div class="actions">
+             <button class="small" onclick="editMenuItem(${item.id})">
+               <i class="fas fa-edit"></i> Edit
+             </button>
+             <button class="small ghost" onclick="toggleMenuItem(${item.id})">
+               <i class="fas ${item.active ? 'fa-eye-slash' : 'fa-eye'}"></i> ${item.active ? 'Deactivate' : 'Activate'}
+             </button>
+           </div>
+         </td>`
+      );
+      tbody.appendChild(tr);
+    });
+  } else {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="8" style="text-align:center;padding:40px">
+          <div class="empty">
+            <i class="fas fa-utensils"></i>
+            <div>No menu items found</div>
+          </div>
+        </td>
+      </tr>
+    `;
+  }
+}
+
+function showAddMenuItemModal() {
+  const modal = el('div', {class: 'modal-backdrop'}, 
+    `<div class="modal">
+      <h3>Add New Menu Item</h3>
+      <form id="addMenuItemForm" onsubmit="return false;">
+        <div class="form-group">
+          <label>Name *</label>
+          <input type="text" name="name" required placeholder="Enter item name">
+        </div>
+        <div class="form-group">
+          <label>Price *</label>
+          <input type="number" name="price" step="0.01" min="0" required placeholder="Enter price">
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <input type="text" name="category" required placeholder="Enter category">
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea name="description" rows="3" placeholder="Enter description"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Initial Stock</label>
+          <input type="number" name="stock" min="0" value="0" placeholder="Enter initial stock">
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" name="active" checked> Active
+          </label>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:20px">
+          <button type="submit" style="flex:1">
+            <i class="fas fa-save"></i> Save Item
+          </button>
+          <button type="button" class="ghost" onclick="this.closest('.modal-backdrop').remove()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>`
+  );
+  
+  document.body.appendChild(modal);
+  document.getElementById('addMenuItemForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    
+    const newItem = {
+      id: Math.max(...state.menu.map(m => m.id)) + 1,
+      name: formData.get('name'),
+      price: parseFloat(formData.get('price')),
+      category: formData.get('category'),
+      description: formData.get('description'),
+      stock: parseInt(formData.get('stock')),
+      active: formData.get('active') === 'on'
+    };
+    
+    state.menu.push(newItem);
+    modal.remove();
+    updateMenuTable();
+    showToast(`Menu item "${newItem.name}" added successfully`);
+  });
+}
+
+function editMenuItem(id) {
+  const item = state.menu.find(m => m.id === id);
+  if (!item) return;
+  
+  showToast(`Edit functionality for "${item.name}" would open here`, 'success');
+}
+
+function toggleMenuItem(id) {
+  const item = state.menu.find(m => m.id === id);
+  if (!item) return;
+  
+  item.active = !item.active;
+  updateMenuTable();
+  showToast(`Menu item "${item.name}" ${item.active ? 'activated' : 'deactivated'}`);
+}
+
+// ===== Buffet Data Management =====
+function updateBuffetTable() {
+  const tbody = document.querySelector('#buffetTable tbody');
+  if (!tbody) return;
+  
+  if (state.buffetPackages && state.buffetPackages.length > 0) {
+    tbody.innerHTML = '';
+    state.buffetPackages.forEach(pkg => {
+      const tr = el('tr', {}, 
+        `<td>${escapeHtml(pkg.name)}</td>
+         <td>₱${pkg.price.toLocaleString()}</td>
+         <td>
+           <ul style="margin:0;padding-left:16px">
+             ${pkg.inclusions.map(inc => `<li style="margin-bottom:4px">${escapeHtml(inc)}</li>`).join('')}
+           </ul>
+         </td>
+         <td>
+           <div class="actions">
+             <button class="small" onclick="editBuffetPackage(${pkg.id})">
+               <i class="fas fa-edit"></i> Edit
+             </button>
+             <button class="small ghost" onclick="deleteBuffetPackage(${pkg.id})">
+               <i class="fas fa-trash"></i> Remove
+             </button>
+           </div>
+         </td>`
+      );
+      tbody.appendChild(tr);
+    });
+  } else {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="4" style="text-align:center;padding:40px">
+          <div class="empty">
+            <i class="fas fa-utensil-spoon"></i>
+            <div>No buffet packages found</div>
+          </div>
+        </td>
+      </tr>
+    `;
+  }
+}
+
+function showAddBuffetPackageModal() {
+  const modal = el('div', {class: 'modal-backdrop'}, 
+    `<div class="modal">
+      <h3>Add New Buffet Package</h3>
+      <form id="addBuffetPackageForm" onsubmit="return false;">
+        <div class="form-group">
+          <label>Package Name *</label>
+          <input type="text" name="name" required placeholder="Enter package name">
+        </div>
+        <div class="form-group">
+          <label>Base Price *</label>
+          <input type="number" name="price" min="0" required placeholder="Enter base price">
+        </div>
+        <div class="form-group">
+          <label>Inclusions</label>
+          <div id="inclusionsContainer">
+            <div class="inclusion-item">
+              <input type="text" name="inclusion[]" placeholder="Enter inclusion">
+              <button type="button" class="small ghost" onclick="removeInclusion(this)"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <button type="button" class="small" onclick="addInclusion()" style="margin-top:8px">
+            <i class="fas fa-plus"></i> Add Inclusion
+          </button>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:20px">
+          <button type="submit" style="flex:1">
+            <i class="fas fa-save"></i> Save Package
+          </button>
+          <button type="button" class="ghost" onclick="this.closest('.modal-backdrop').remove()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>`
+  );
+  
+  document.body.appendChild(modal);
+  document.getElementById('addBuffetPackageForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const inclusions = Array.from(document.querySelectorAll('input[name="inclusion[]"]'))
+      .map(input => input.value.trim())
+      .filter(val => val);
+    
+    const newPackage = {
+      id: Math.max(...state.buffetPackages.map(b => b.id)) + 1,
+      name: formData.get('name'),
+      price: parseInt(formData.get('price')),
+      inclusions: inclusions
+    };
+    
+    state.buffetPackages.push(newPackage);
+    modal.remove();
+    updateBuffetTable();
+    showToast(`Buffet package "${newPackage.name}" added successfully`);
+  });
+}
+
+function addInclusion() {
+  const container = document.getElementById('inclusionsContainer');
+  const div = el('div', {class: 'inclusion-item'}, 
+    `<input type="text" name="inclusion[]" placeholder="Enter inclusion">
+     <button type="button" class="small ghost" onclick="removeInclusion(this)"><i class="fas fa-times"></i></button>`
+  );
+  container.appendChild(div);
+}
+
+function removeInclusion(button) {
+  button.closest('.inclusion-item').remove();
+}
+
+function editBuffetPackage(id) {
+  const pkg = state.buffetPackages.find(b => b.id === id);
+  if (!pkg) return;
+  
+  showToast(`Edit functionality for "${pkg.name}" package would open here`, 'success');
+}
+
+function deleteBuffetPackage(id) {
+  const pkg = state.buffetPackages.find(b => b.id === id);
+  if (!pkg) return;
+  
+  if (confirm(`Are you sure you want to remove the "${pkg.name}" package?`)) {
+    state.buffetPackages = state.buffetPackages.filter(b => b.id !== id);
+    updateBuffetTable();
+    showToast(`Buffet package "${pkg.name}" removed successfully`);
+  }
+}
+
+// ===== Initialization =====
+function init() {
+  // Set user name in header
+  document.getElementById('displayName').textContent = state.user.name;
+  document.getElementById('avatarText').textContent = state.user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+  
+  // Render sidebar and initial view
+  renderSidebar();
+  renderView(currentView());
+  
+  // Add search functionality
+  document.getElementById('searchInput').addEventListener('input', function() {
+    const query = this.value.toLowerCase();
+    if (query.length > 2) {
+      showToast(`Searching for: ${query}`, 'success');
+    }
+  });
+}
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
